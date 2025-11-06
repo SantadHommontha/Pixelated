@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using NUnit.Framework.Constraints;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 public class GlitchPixelated : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-    public GlitchPixelated otherPicture;
+    //  public GlitchPixelated otherPicture;
 
     public int dividePixels = 10;
     public float mouseDragRadius = 10f;
@@ -35,7 +37,7 @@ public class GlitchPixelated : MonoBehaviour
     private int sizeX, sizeY;
     public bool isMainSprite;
     public Color[] colortest;
-    private bool canFade = true;
+    public bool canFade = true;
     //[Range(0f, 1f)] public float F = 0;
     void Start()
     {
@@ -49,6 +51,7 @@ public class GlitchPixelated : MonoBehaviour
         SetUp();
     }
 
+    
     // เซ็คค่าพื้นฐานต่างๆ
     private void SetUp()
     {
@@ -84,7 +87,7 @@ public class GlitchPixelated : MonoBehaviour
             }
         }
     }
- // บวกค่าใน array 2 มิติอันที่ 1 ให้มีแค่เพิ่มขึ้นตาม array ที่ 2
+    // บวกค่าใน array 2 มิติอันที่ 1 ให้มีแค่เพิ่มขึ้นตาม array ที่ 2
     private void Add2DArrayToValue(float[,] _array1, float[,] _array2)
     {
         if (_array1 == null || _array2 == null) return;
@@ -126,29 +129,29 @@ public class GlitchPixelated : MonoBehaviour
     void Update()
     {
         rayCastHit = Physics2D.Raycast(cameraMain.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (Input.GetKeyDown(KeyCode.Q) && isMainSprite)
-            PixelatedMethod();
+        // if (Input.GetKeyDown(KeyCode.Q) && isMainSprite)
+        //     PixelatedMethod();
 
         // if (Input.GetKeyDown(KeyCode.E))
         //     UpdateSprite(originalTexture);
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (otherPicture != null)
-                SendSetUP();
-        }
+        // if (Input.GetKeyDown(KeyCode.W))
+        // {
+        //     if (otherPicture != null)
+        //         SendSetUP();
+        // }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (otherPicture != null)
-                SendData();
-        }
+        // if (Input.GetKeyDown(KeyCode.E))
+        // {
+        //     if (otherPicture != null)
+        //         SendData();
+        // }
 
         // FindPixelSeclcet();
         // if (Input.GetKeyDown(KeyCode.R) && otherPicture != null)
         //     CombineFromOther(otherPicture);
 
-        if (Input.GetKeyDown(KeyCode.U))
-            Debug.Log($"Seclet {FindPixelSeclcet()}");
+        // if (Input.GetKeyDown(KeyCode.U))
+        //     Debug.Log($"Seclet {FindPixelSeclcet()}");
 
         if (Input.GetKeyDown(KeyCode.F))
             DebugColorFade();
@@ -159,21 +162,21 @@ public class GlitchPixelated : MonoBehaviour
     }
 
     // PIXELATION
-  
+
     void PixelatedMethod()
     {
 
         if (dividePixels <= 0)
             dividePixels = 1;
-/**
-        //   Debug.Log("--------------");
+        /**
+                //   Debug.Log("--------------");
 
-        // if (sharedPixelPattern == null ||
-        //     sharedPixelPattern.GetLength(0) != sizeX ||
-        //     sharedPixelPattern.GetLength(1) != sizeY)
-        // {
-        //     sharedPixelPattern = new Color[sizeX, sizeY];
-**/
+                // if (sharedPixelPattern == null ||
+                //     sharedPixelPattern.GetLength(0) != sizeX ||
+                //     sharedPixelPattern.GetLength(1) != sizeY)
+                // {
+                //     sharedPixelPattern = new Color[sizeX, sizeY];
+        **/
         for (int by = 0; by < sizeY; by++)
         {
             for (int bx = 0; bx < sizeX; bx++)
@@ -186,38 +189,38 @@ public class GlitchPixelated : MonoBehaviour
                 pixelateColor[bx, by] = new Color(r, g, b, a);
                 coloraFade[bx, by] = 0;
                 colorFadeValue[bx, by] = 0;
-             
+
                 FadePixel(bx + 1, by + 1, 0);
             }
         }
-/**
-        // for (int y = 0; y < height; y += dividePixels)
-        // {
-        //     for (int x = 0; x < width; x += dividePixels)
-        //     {
-        //         int bx = x / dividePixels;
-        //         int by = y / dividePixels;
-        //         Color pixelColor = sharedPixelPattern[bx, by];
+        /**
+                // for (int y = 0; y < height; y += dividePixels)
+                // {
+                //     for (int x = 0; x < width; x += dividePixels)
+                //     {
+                //         int bx = x / dividePixels;
+                //         int by = y / dividePixels;
+                //         Color pixelColor = sharedPixelPattern[bx, by];
 
-        //         for (int dy = 0; dy < dividePixels; dy++)
-        //         {
-        //             for (int dx = 0; dx < dividePixels; dx++)
-        //             {
-        //                 int px = x + dx;
-        //                 int py = y + dy;
+                //         for (int dy = 0; dy < dividePixels; dy++)
+                //         {
+                //             for (int dx = 0; dx < dividePixels; dx++)
+                //             {
+                //                 int px = x + dx;
+                //                 int py = y + dy;
 
-        //                 if (px < width && py < height)
-        //                 {
-        //                     //      Debug.Log("__");
-        //                     copyTexture.SetPixel(px, py, pixelColor);
-        //                     changedPixels.Add(new Vector2Int(px, py));
+                //                 if (px < width && py < height)
+                //                 {
+                //                     //      Debug.Log("__");
+                //                     copyTexture.SetPixel(px, py, pixelColor);
+                //                     changedPixels.Add(new Vector2Int(px, py));
 
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-**/
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+        **/
         copyTexture.Apply();
         UpdateSprite();
 
@@ -263,7 +266,7 @@ public class GlitchPixelated : MonoBehaviour
 
     private void FadePixel()
     {
-        if (rayCastHit.collider != collider) return;
+        // if (rayCastHit.collider != collider) return;
         //  if (!canFade) return;
         var fps = FindPixelSeclcet();
         var currentFadeValue = (coloraFade[fps.x - 1, fps.y - 1] += fadeSpeed);
@@ -273,34 +276,34 @@ public class GlitchPixelated : MonoBehaviour
         var changeIndex = new Vector2Int(fps.x, fps.y);
         if (!changedPixelsData.Contains(changeIndex))
             changedPixelsData.Add(changeIndex);
-/**
-        // var ogIndex = FindPixelSeclcet();
-        // var pxIndex = ogIndex;
-        // pxIndex.x = pxIndex.x - 1;
-        // pxIndex.y = pxIndex.y - 1;
-        // var startX = pxIndex.x * dividePixels;
-        // var startY = pxIndex.y * dividePixels;
+        /**
+                // var ogIndex = FindPixelSeclcet();
+                // var pxIndex = ogIndex;
+                // pxIndex.x = pxIndex.x - 1;
+                // pxIndex.y = pxIndex.y - 1;
+                // var startX = pxIndex.x * dividePixels;
+                // var startY = pxIndex.y * dividePixels;
 
 
-        // int blockwidth = startX + dividePixels >= originalTexture.width ? blockwidth = originalTexture.width - startX : blockwidth = dividePixels;
-        // int blockHigth = startY + dividePixels >= originalTexture.height ? blockHigth = originalTexture.height - startY : blockHigth = dividePixels;
+                // int blockwidth = startX + dividePixels >= originalTexture.width ? blockwidth = originalTexture.width - startX : blockwidth = dividePixels;
+                // int blockHigth = startY + dividePixels >= originalTexture.height ? blockHigth = originalTexture.height - startY : blockHigth = dividePixels;
 
-        // var originalColors = originalTexture.GetPixels(startX, startY, blockwidth, blockHigth);
-        // colortest = new Color[originalColors.Length];
-        // colortest = originalColors;
-        // var currentColor = pixelateColor[pxIndex.x, pxIndex.y];
-        // var newColors = new Color[originalColors.Length];
-        // var currentFadeValue = (coloraFade[pxIndex.x, pxIndex.y] += fadeSpeed);
-        // for (int i = 0; i < originalColors.Length; i++)
-        // {
-        //     newColors[i] = Color.Lerp(
-        //         currentColor,
-        //         originalColors[i],
-        //         currentFadeValue
-        //     );
-        // }
-        // SetColor(startX, startY, blockwidth, blockHigth, newColors);
-        **/
+                // var originalColors = originalTexture.GetPixels(startX, startY, blockwidth, blockHigth);
+                // colortest = new Color[originalColors.Length];
+                // colortest = originalColors;
+                // var currentColor = pixelateColor[pxIndex.x, pxIndex.y];
+                // var newColors = new Color[originalColors.Length];
+                // var currentFadeValue = (coloraFade[pxIndex.x, pxIndex.y] += fadeSpeed);
+                // for (int i = 0; i < originalColors.Length; i++)
+                // {
+                //     newColors[i] = Color.Lerp(
+                //         currentColor,
+                //         originalColors[i],
+                //         currentFadeValue
+                //     );
+                // }
+                // SetColor(startX, startY, blockwidth, blockHigth, newColors);
+                **/
     }
     //เซ็คสีที่ต่างๆลงใน texture
     private void SetColor(int _startPx, int _StartPy, int _blockWidth, int blockHight, Color[] _color)
@@ -341,7 +344,13 @@ public class GlitchPixelated : MonoBehaviour
 
     void OnMouseDrag()
     {
-        FadePixel();
+        if (rayCastHit.collider == collider)
+        {
+            if (!canFade) return;
+            FadePixel();
+        }
+
+
     }
 
     /**ตอนปัด
@@ -466,18 +475,40 @@ public class GlitchPixelated : MonoBehaviour
     //ส่งข้อมูลการปัดตำแหน่งต่างๆ ไป
     public void SendData()
     {
-        otherPicture.ReciveData(colorFadeValue, changedPixelsData);
+        //    otherPicture.ReciveData(colorFadeValue, changedPixelsData);
         Set2DArrayToValue(colorFadeValue, 0);
         changedPixelsData.Clear();
     }
+    public void ClearFadeData()
 
-    // ส่งค่าจากตัว setup ไปให้อีกรูปนึง
-    private void SendSetUP()
     {
-        otherPicture.ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, pixelateColor, copyTexture.GetPixels());
+        Set2DArrayToValue(colorFadeValue, 0);
+        changedPixelsData.Clear();
+    }
+    public void GetFadeData(out float[,] _colorFadeValue, out List<Vector2Int> _changedPixelsData)
+    {
+
+        _colorFadeValue = colorFadeValue;
+        _changedPixelsData = changedPixelsData;
+
     }
 
-     // รับค่า setup จากอันอื่น
+    // ส่งค่าจากตัว setup ไปให้อีกรูปนึง
+    public void GetSetUp(out Color[,] _pixelateColorPatturn, out Color[] _allColors)
+    {
+        // otherPicture.ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, pixelateColor, copyTexture.GetPixels());
+        _pixelateColorPatturn = pixelateColor;
+        _allColors = copyTexture.GetPixels();
+    }
+    public GlitchPixelated GetSetUp() => this;
+    
+    // รับค่า setup จากอันอื่น
+     
+    public void ReciveSetUp(Color[,] _pixelateColorPatturn, Color[] _allColors)
+    {
+
+        ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, _pixelateColorPatturn, _allColors);
+    }
     public void ReciveSetUp(int _dividePixels, float _mouseDragRadius, float _fadeSpeed, Color[,] _pixelateColorPatturn, Color[] _allColors)
     {
         SetUp();
