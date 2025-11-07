@@ -1,31 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PixelatedHandle : MonoBehaviour
 {
     public GlitchPixelated mainGiltch;
     public GlitchPixelated otherGlitch;
+    public Sprite sprite;
     public float delay;
     public bool showDebug;
     void Start()
     {
-
+        SetOriginalTexturn();
     }
-
-    [ContextMenu("SendSetUp")]
-    public void SendSetUp()
+    [ContextMenu("SetOriginalTexturn")]
+    public void SetOriginalTexturn()
     {
-        mainGiltch.GetSetUp(out var _pixelateColorPatturn, out var _allColors);
-        otherGlitch.ReciveSetUp(_pixelateColorPatturn, _allColors);
-
+        mainGiltch.SetOriginalTexturn(sprite.texture);
     }
     [ContextMenu("Pixelate")]
     public void Pixelate()
     {
         mainGiltch.PixelatedMethod();
     }
+    [ContextMenu("SendSetUp")]
+    public void SendSetUp()
+    {
+
+        otherGlitch.ReciveSetUp(mainGiltch.GetSetUp());
+
+    }
+
 
 
     [ContextMenu("Start Loop")]
@@ -58,5 +64,10 @@ public class PixelatedHandle : MonoBehaviour
             mainGiltch.canFade = true;
         }
 
+    }
+
+    void OnMouseDrag()
+    {
+        mainGiltch.MouseDrag();
     }
 }
