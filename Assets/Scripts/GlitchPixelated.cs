@@ -7,38 +7,33 @@ using UnityEngine;
 
 public class GlitchPixelated : MonoBehaviour
 {
+    #region Public Variable
     public SpriteRenderer spriteRenderer;
     //  public GlitchPixelated otherPicture;
-
     public int dividePixels = 10;
     public float mouseDragRadius = 10f;
     public float fadeSpeed = 0.15f;
+    public Color[] colortest;
+    public bool canFade = true;
+    #endregion
 
+    #region Private Variable
     private Texture2D originalTexture;
     private Texture2D copyTexture;
     private Camera cameraMain;
-    private RaycastHit2D rayCastHit;
-
     // Track which pixels were changed or restored
-     public HashSet<Vector2Int> changedPixels = new HashSet<Vector2Int>();
+    private HashSet<Vector2Int> changedPixels = new HashSet<Vector2Int>();
     //  private HashSet<Vector2Int> restoredPixels = new HashSet<Vector2Int>();
     // Shared random pattern for consistent pixelation between images
-    //private Color[,] sharedPixelPattern;
-
-    private Color[,] pixelateColor; //สีในแต่ะ px
-  //  public List<Vector2Int> changedPixelsData = new List<Vector2Int>(); //เก็บว่ามี grid ใหนเปลี่ยนบ้าง
-
+    private Color[,] pixelPattern; //สีในแต่ะ px
     private float[,] coloraFade; // ค่าที่ถูกของตัว px ที่ถูกปัดไปแล้ว 0 เป็นภาพ px 1 เป็นภาพต้นฉบับ
     private float[,] colorFadeValue; // เก็บค่าที่เราปัดในแต่ละ px ก่อนที่เราจะส่งออกไป แล้วจะรีเซ็ดค่าเป็น 0 หลังจากที่ส่งไป 
 
-    private int width => originalTexture.width;
-    private int height => originalTexture.height;
+    private int texturnWidth => originalTexture.width;
+    private int texturnHeight => originalTexture.height;
     private Collider2D collider;
     private int sizeX, sizeY;
-    public bool isMainSprite;
-    public Color[] colortest;
-    public bool canFade = true;
-    //[Range(0f, 1f)] public float F = 0;
+    #endregion
     void Start()
     {
         if (spriteRenderer == null)
@@ -46,7 +41,6 @@ public class GlitchPixelated : MonoBehaviour
         collider = GetComponent<Collider2D>();
         cameraMain = Camera.main;
         originalTexture = spriteRenderer.sprite.texture;
-
 
         SetUp();
     }
@@ -61,59 +55,17 @@ public class GlitchPixelated : MonoBehaviour
 
         canFade = true;
 
-        sizeX = Mathf.CeilToInt(width / (float)dividePixels);
-        sizeY = Mathf.CeilToInt(height / (float)dividePixels);
+        sizeX = Mathf.CeilToInt(texturnWidth / (float)dividePixels);
+        sizeY = Mathf.CeilToInt(texturnHeight / (float)dividePixels);
 
-        pixelateColor = new Color[sizeX, sizeY];
+        pixelPattern = new Color[sizeX, sizeY];
         coloraFade = new float[sizeX, sizeY];
         colorFadeValue = new float[sizeX, sizeY];
-        pixelateColor = new Color[sizeX, sizeY];
-
-    }
-
-    // เซ็ตค่า array 2 2มิติให้มีแค่เท่ากับ value
-    private void Set2DArrayToValue<T>(T[,] _array, T _value)
-    {
-        if (_array == null) return;
-
-        int rows = _array.GetLength(0);
-        int cols = _array.GetLength(1);
-
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                _array[i, j] = _value;
-            }
-        }
-    }
-    // บวกค่าใน array 2 มิติอันที่ 1 ให้มีแค่เพิ่มขึ้นตาม array ที่ 2
-    private void Add2DArrayToValue(float[,] _array1, float[,] _array2)
-    {
-        if (_array1 == null || _array2 == null) return;
-
-        int rows1 = _array1.GetLength(0);
-        int cols1 = _array1.GetLength(1);
-
-        int rows2 = _array2.GetLength(0);
-        int cols2 = _array2.GetLength(1);
-
-        if (rows1 != rows2) return;
-        if (cols1 != cols2) return;
-
-
-        for (int i = 0; i < rows1; i++)
-        {
-            for (int j = 0; j < cols1; j++)
-            {
-                _array1[i, j] += _array2[i, j];
-            }
-        }
     }
 
     void Update()
     {
-        rayCastHit = Physics2D.Raycast(cameraMain.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        //  rayCastHit = Physics2D.Raycast(cameraMain.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         // if (Input.GetKeyDown(KeyCode.Q) && isMainSprite)
         //     PixelatedMethod();
 
@@ -139,11 +91,11 @@ public class GlitchPixelated : MonoBehaviour
         //     Debug.Log($"Seclet {FindPixelSeclcet()}");
 
 
+        Debug.Log(FindGridSeclcet());
 
     }
-
     // PIXELATION
-
+    #region Pixelated
     public void PixelatedMethod()
     {
 
@@ -167,11 +119,11 @@ public class GlitchPixelated : MonoBehaviour
                 float b = Random.Range(0.4f, 1f);
                 float a = 1f;
 
-                pixelateColor[bx, by] = new Color(r, g, b, a);
+                pixelPattern[bx, by] = new Color(r, g, b, a);
                 coloraFade[bx, by] = 0;
                 colorFadeValue[bx, by] = 0;
 
-                FadePixel(bx + 1, by + 1, 0);
+                FadePixel(bx, by, 0);
             }
         }
         /**
@@ -202,11 +154,11 @@ public class GlitchPixelated : MonoBehaviour
                 //     }
                 // }
         **/
-        copyTexture.Apply();
-        UpdateSprite();
+        //  copyTexture.Apply();
+        //   UpdateSprite();
 
     }
-
+    #endregion
     void UpdateSprite(Texture2D texture = null)
     {
         if (texture == null)
@@ -220,7 +172,7 @@ public class GlitchPixelated : MonoBehaviour
     //ทำการ lerp px ตามตำแหน่งที่กำหนด
     private void FadePixel(int _px, int _py, float _fadeValue)
     {
-        Vector2Int pxIndex = new Vector2Int(_px - 1, _py - 1);
+        Vector2Int pxIndex = new Vector2Int(_px, _py);
 
         var startX = pxIndex.x * dividePixels;
         var startY = pxIndex.y * dividePixels;
@@ -232,7 +184,7 @@ public class GlitchPixelated : MonoBehaviour
         var originalColors = originalTexture.GetPixels(startX, startY, blockwidth, blockHigth);
         colortest = new Color[originalColors.Length];
         colortest = originalColors;
-        var currentColor = pixelateColor[pxIndex.x, pxIndex.y];
+        var currentColor = pixelPattern[pxIndex.x, pxIndex.y];
         var newColors = new Color[originalColors.Length];
 
         for (int i = 0; i < originalColors.Length; i++)
@@ -250,12 +202,13 @@ public class GlitchPixelated : MonoBehaviour
     {
         // if (rayCastHit.collider != collider) return;
         //  if (!canFade) return;
-        var fps = FindPixelSeclcet();
-        var currentFadeValue = (coloraFade[fps.x - 1, fps.y - 1] += fadeSpeed);
-        colorFadeValue[fps.x - 1, fps.y - 1] += fadeSpeed;
+        var pixelSeclcet = FindPixelSeclcet();
+        var fps = FindGridSeclcet(pixelSeclcet.x, pixelSeclcet.y);
+        var currentFadeValue = (coloraFade[fps.x, fps.y] += fadeSpeed);
+        colorFadeValue[fps.x, fps.y] += fadeSpeed;
         FadePixel(fps.x, fps.y, currentFadeValue);
 
-       // var changeIndex = new Vector2Int(fps.x, fps.y);
+        // var changeIndex = new Vector2Int(fps.x, fps.y);
         //    if (!changedPixelsData.Contains(changeIndex))
         //      changedPixelsData.Add(changeIndex);
         changedPixels.Add(new Vector2Int(fps.x, fps.y));
@@ -299,7 +252,7 @@ public class GlitchPixelated : MonoBehaviour
     //หาว่าเมาร์ไปชี่อยู่ที่ pixel grid ที่เท่าไร
     private Vector2Int FindPixelSeclcet()
     {
-        Vector3 localPos = transform.InverseTransformPoint(rayCastHit.point);
+        Vector3 localPos = transform.InverseTransformPoint(RaycastHit().point);
         Sprite sprite = spriteRenderer.sprite;
         float ppu = sprite.pixelsPerUnit;
 
@@ -317,23 +270,32 @@ public class GlitchPixelated : MonoBehaviour
             pixelCoords.x += rect.x;
             pixelCoords.y += rect.y;
         }
+        return new Vector2Int(Mathf.CeilToInt(pixelCoords.x), Mathf.CeilToInt(pixelCoords.y)); ;
+    }
 
-        var vc2Int = new Vector2Int(Mathf.CeilToInt(pixelCoords.x / dividePixels), Mathf.CeilToInt(pixelCoords.y / dividePixels));
+    private Vector2Int FindGridSeclcet(int _px, int _py)
+    {
+        return new Vector2Int(Mathf.CeilToInt(_px / dividePixels), Mathf.CeilToInt(_py / dividePixels));
+    }
+    private Vector2Int FindGridSeclcet()
+    {
+        var pixelSeclcet = FindPixelSeclcet();
+        return new Vector2Int(Mathf.CeilToInt(pixelSeclcet.x / dividePixels), Mathf.CeilToInt(pixelSeclcet.y / dividePixels));
+    }
+    private void FindPixelSeclcetInMouseRadius()
+    {
 
-        return vc2Int;
+        
     }
     #endregion
     // MOUSE INTERACTION
-
     void OnMouseDrag()
     {
-        if (rayCastHit.collider == collider)
+        if (RaycastHit().collider == collider)
         {
             if (!canFade) return;
             FadePixel();
         }
-
-
     }
 
     /**ตอนปัด
@@ -450,7 +412,8 @@ public class GlitchPixelated : MonoBehaviour
 
     {
         Set2DArrayToValue(colorFadeValue, 0);
-        changedPixelsData.Clear();
+        // changedPixelsData.Clear();
+        changedPixels.Clear();
     }
     #region Send ,Recive
 
@@ -458,41 +421,40 @@ public class GlitchPixelated : MonoBehaviour
     public void SendData()
     {
         //    otherPicture.ReciveData(colorFadeValue, changedPixelsData);
-        Set2DArrayToValue(colorFadeValue, 0);
-        changedPixelsData.Clear();
+
+        // ClearFadeData();
     }
     //รับค่าที่คนอื่นปัดมาบวกเข้ากับตัวเอง
-    public void ReciveData(float[,] _colorFadeValue, List<Vector2Int> _changedPixelsData)
+    public void ReciveData(float[,] _colorFadeValue, List<Vector2Int> _changedPixels)
     {
         canFade = false;
         Add2DArrayToValue(coloraFade, _colorFadeValue);
-        foreach (var T in _changedPixelsData)
+        foreach (var T in _changedPixels)
         {
-            FadePixel(T.x, T.y, coloraFade[T.x - 1, T.y - 1]);
+            FadePixel(T.x, T.y, coloraFade[T.x, T.y]);
         }
         canFade = true;
     }
-    public void GetFadeData(out float[,] _colorFadeValue, out List<Vector2Int> _changedPixelsData)
+    public void GetFadeData(out float[,] _colorFadeValue, out HashSet<Vector2Int> _changedPixels)
     {
-
         _colorFadeValue = colorFadeValue;
-        _changedPixelsData = changedPixelsData;
-
+        //   _changedPixelsData = changedPixelsData;
+        _changedPixels = changedPixels;
     }
 
     // ส่งค่าจากตัว setup ไปให้อีกรูปนึง
     public void GetSetUp(out Color[,] _pixelateColorPatturn, out Color[] _allColors)
     {
         // otherPicture.ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, pixelateColor, copyTexture.GetPixels());
-        _pixelateColorPatturn = pixelateColor;
+        _pixelateColorPatturn = pixelPattern;
         _allColors = copyTexture.GetPixels();
     }
-    public void ReciveSetUp(out int _dividePixels, out float _mouseDragRadius, out float _fadeSpeed, out Color[,] _pixelateColorPatturn, out Color[] _allColors)
+    public void ReciveSetUp(out int _dividePixels, out float _mouseDragRadius, out float _fadeSpeed, out Color[,] _pixelatePatturn, out Color[] _allColors)
     {
         _dividePixels = dividePixels;
         _mouseDragRadius = mouseDragRadius;
         _fadeSpeed = fadeSpeed;
-        _pixelateColorPatturn = pixelateColor;
+        _pixelatePatturn = pixelPattern;
         _allColors = copyTexture.GetPixels();
     }
 
@@ -502,27 +464,27 @@ public class GlitchPixelated : MonoBehaviour
     // รับค่า setup จากอันอื่น
     public void ReciveSetUp(GlitchPixelated _glitchPixelated)
     {
-        ReciveSetUp(_glitchPixelated.dividePixels, _glitchPixelated.mouseDragRadius, _glitchPixelated.fadeSpeed, _glitchPixelated.pixelateColor, _glitchPixelated.copyTexture.GetPixels());
+        ReciveSetUp(_glitchPixelated.dividePixels, _glitchPixelated.mouseDragRadius, _glitchPixelated.fadeSpeed, _glitchPixelated.pixelPattern, _glitchPixelated.copyTexture.GetPixels());
     }
 
-    public void ReciveSetUp(Color[,] _pixelateColorPatturn, Color[] _allColors)
+    public void ReciveSetUp(Color[,] _pixelatePatturn, Color[] _allColors)
     {
 
-        ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, _pixelateColorPatturn, _allColors);
+        ReciveSetUp(dividePixels, mouseDragRadius, fadeSpeed, _pixelatePatturn, _allColors);
     }
-    public void ReciveSetUp(int _dividePixels, float _mouseDragRadius, float _fadeSpeed, Color[,] _pixelateColorPatturn, Color[] _allColors)
+    public void ReciveSetUp(int _dividePixels, float _mouseDragRadius, float _fadeSpeed, Color[,] _pixelatePatturn, Color[] _allColors)
     {
         SetUp();
         dividePixels = _dividePixels;
         mouseDragRadius = _mouseDragRadius;
         fadeSpeed = _fadeSpeed;
-        pixelateColor = _pixelateColorPatturn;
+        pixelPattern = _pixelatePatturn;
 
         for (int by = 0; by < sizeY; by++)
         {
             for (int bx = 0; bx < sizeX; bx++)
             {
-                FadePixel(bx + 1, by + 1, 0);
+                FadePixel(bx, by, 0);
             }
         }
         copyTexture.Apply();
@@ -530,8 +492,51 @@ public class GlitchPixelated : MonoBehaviour
     }
     #endregion
 
+    #region Utility
 
+    private RaycastHit2D RaycastHit()
+    {
+        return Physics2D.Raycast(cameraMain.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+    }
+    // เซ็ตค่า array 2 2มิติให้มีแค่เท่ากับ value
+    private void Set2DArrayToValue<T>(T[,] _array, T _value)
+    {
+        if (_array == null) return;
 
+        int rows = _array.GetLength(0);
+        int cols = _array.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                _array[i, j] = _value;
+            }
+        }
+    }
+    // บวกค่าใน array 2 มิติอันที่ 1 ให้มีแค่เพิ่มขึ้นตาม array ที่ 2
+    private void Add2DArrayToValue(float[,] _array1, float[,] _array2)
+    {
+        if (_array1 == null || _array2 == null) return;
+
+        int rows1 = _array1.GetLength(0);
+        int cols1 = _array1.GetLength(1);
+
+        int rows2 = _array2.GetLength(0);
+        int cols2 = _array2.GetLength(1);
+
+        if (rows1 != rows2) return;
+        if (cols1 != cols2) return;
+
+        for (int i = 0; i < rows1; i++)
+        {
+            for (int j = 0; j < cols1; j++)
+            {
+                _array1[i, j] += _array2[i, j];
+            }
+        }
+    }
+    #endregion
 
 
 #if UNITY_EDITOR

@@ -395,8 +395,6 @@ MonoBehaviour:
   dividePixels: 50
   mouseDragRadius: 80
   fadeSpeed: 0.1
-  changedPixelsData: []
-  isMainSprite: 0
   colortest: []
   canFade: 1
 --- !u!212 &617369408
@@ -681,8 +679,6 @@ MonoBehaviour:
   dividePixels: 50
   mouseDragRadius: 10
   fadeSpeed: 0.05
-  changedPixelsData: []
-  isMainSprite: 1
   colortest: []
   canFade: 1
 --- !u!212 &712301543
@@ -769,7 +765,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainGiltch: {fileID: 712301542}
   otherGlitch: {fileID: 1487799647}
-  delay: 0
+  delay: 0.1
+  showDebug: 0
 --- !u!1 &1487799644
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,8 +873,6 @@ MonoBehaviour:
   dividePixels: 50
   mouseDragRadius: 10
   fadeSpeed: 0.05
-  changedPixelsData: []
-  isMainSprite: 1
   colortest: []
   canFade: 1
 --- !u!61 &1487799648
@@ -940,7 +935,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainGiltch: {fileID: 1487799647}
   otherGlitch: {fileID: 712301542}
-  delay: 0.3
+  delay: 0.1
+  showDebug: 0
 --- !u!1 &1612080183
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,8 +972,6 @@ MonoBehaviour:
   dividePixels: 10
   mouseDragRadius: 30
   fadeSpeed: 0.1
-  changedPixelsData: []
-  isMainSprite: 0
   colortest: []
   canFade: 1
 --- !u!212 &1612080185

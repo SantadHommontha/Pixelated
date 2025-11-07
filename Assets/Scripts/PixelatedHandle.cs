@@ -8,6 +8,7 @@ public class PixelatedHandle : MonoBehaviour
     public GlitchPixelated mainGiltch;
     public GlitchPixelated otherGlitch;
     public float delay;
+    public bool showDebug;
     void Start()
     {
 
@@ -42,7 +43,7 @@ public class PixelatedHandle : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(delay);
-            Debug.Log($"Update {gameObject.name}");
+            if (showDebug) Debug.Log($"Update {gameObject.name}");
             mainGiltch.canFade = false;
             float[,] colorFadeValue;
             List<Vector2Int> changedPixelsData;
