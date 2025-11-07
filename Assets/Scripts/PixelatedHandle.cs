@@ -13,14 +13,18 @@ public class PixelatedHandle : MonoBehaviour
 
     }
 
-    [ContextMenu("GetSetUp")]
-    public void GetSetUp()
+    [ContextMenu("SendSetUp")]
+    public void SendSetUp()
     {
         mainGiltch.GetSetUp(out var _pixelateColorPatturn, out var _allColors);
         otherGlitch.ReciveSetUp(_pixelateColorPatturn, _allColors);
 
     }
-
+    [ContextMenu("Pixelate")]
+    public void Pixelate()
+    {
+        mainGiltch.PixelatedMethod();
+    }
 
 
     [ContextMenu("Start Loop")]
